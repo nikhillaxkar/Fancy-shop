@@ -1,7 +1,10 @@
 import React from "react";
 import Link from "next/link";
+// STEP 1: 'fs' aur 'path' ko import karein (yeh file padhne ke liye hai)
+import fs from "fs";
+import path from "path";
 
-// STEP 1: Product ka type define karein
+// STEP 2: Product ka type (interface) define karein
 interface Product {
   id: number;
   name: string;
@@ -11,49 +14,45 @@ interface Product {
   slug: string;
 }
 
-// STEP 2: 'host' URL ko Vercel ke liye dynamically set karein
-const host = process.env.VERCEL_URL
-  ? "https://" + process.env.VERCEL_URL
-  : "http://localhost:3000";
+// STEP 3: Seedha file se data padhne ka function
+async function getProductBySlug(slug: string): Promise<Product | undefined> {
+  // JSON file ka poora path batayein
+  const filePath = path.join(process.cwd(), "public/data/products.json");
+  // File ko padhein
+  const fileData = fs.readFileSync(filePath, "utf8");
+  // JSON data ko parse karein
+  const products: Product[] = JSON.parse(fileData);
+
+  // File mein se apna product dhoondein
+  const product = products.find((p) => p.slug === slug);
+  return product;
+}
 
 // Server component (async)
-// STEP 3: Yahaan 'params' ko Promise ke roop mein type karein
 export default async function ProductDetail({ params }: { params: Promise<{ slug: string }> }) {
   
-  // STEP 4: 'params' ko 'await' karein (Error yahaan fix hua hai)
+  // STEP 4: 'params' ko 'await' karein (yeh Next.js 16 ke liye zaroori hai)
   const actualParams = await params;
   const { slug } = actualParams;
 
-  // 1️⃣ Fetch all products
-  const res = await fetch(`${host}/api/products`, {
-    cache: "no-store", // Hamesha naya data fetch karega
-  });
+  // STEP 5: 'fetch' ki jagah, naye function ko call karein
+  const product = await getProductBySlug(slug);
 
-  if (!res.ok) {
-     return (
-       <p className="text-center mt-10 text-red-600">Failed to load products 😢</p>
-     );
-  }
-
-  const products: Product[] = await res.json();
-
-  // 2️⃣ Find product by slug
-  const product = products.find((p) => p.slug === slug);
-
+  // Agar product nahi mila toh error dikhayein
   if (!product) {
     return (
       <p className="text-center mt-10 text-gray-600">Product not found 😢</p>
     );
   }
 
-  // 3️⃣ Product link
-  const productLink = `${host}/products/${product.slug}`;
+  // STEP 6: Product link (ab host ki zaroorat nahi)
+  const productLink = `/products/${product.slug}`;
 
-  // 4️⃣ Redirect to Order Form
+  // Baaki ka aapka JSX code
   return (
     <div className="max-w-md mx-auto mt-10 border rounded-xl shadow p-6 bg-white">
       <img
-        src={product.image}
+        src={product.image} // Make sure image path in JSON is like '/images/my-image.jpg'
         alt={product.name}
         className="w-full h-64 object-cover rounded-lg"
       />
