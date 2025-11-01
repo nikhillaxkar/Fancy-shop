@@ -6,8 +6,19 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+// FIX 1: Product ka type (interface) yahaan define karein
+interface Product {
+  id: number; // Ya 'string' agar ID text hai
+  image: string;
+  name: string;
+  description: string;
+  price: number; // Ya 'string' agar price text hai
+  slug: string;
+}
+
 export default function Home() {
-  const [products, setProducts] = useState([]);
+  // FIX 2: useState ko batayein ki yeh Product ka array hai
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     fetch("/api/products")
@@ -56,7 +67,8 @@ export default function Home() {
           Welcome to Fancy Shop ✨
         </h1>
         <p className="mb-8 text-gray-600 text-lg max-w-2xl mx-auto">
-          Explore beautiful and stylish fancy items — bangles, lights, gifts & more.
+          Explore beautiful and stylish fancy items — bangles, lights, gifts &
+          more.
         </p>
 
         <Link
