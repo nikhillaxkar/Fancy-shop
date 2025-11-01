@@ -2,11 +2,23 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+// STEP 1: Product ka type define karein (TypeScript error fix)
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  image: string;
+  price: number;
+  slug: string;
+}
+
 export default function ProductsPage() {
-  const [products, setProducts] = useState([]);
+  // STEP 2: useState ko batayein ki yeh Product ka array hai (TypeScript error fix)
+  const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    // Client-side fetch relative URL ('/api/products') use karta hai, jo sahi hai
     fetch("/api/products")
       .then((res) => res.json())
       .then((data) => setProducts(data))

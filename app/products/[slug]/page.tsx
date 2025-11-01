@@ -1,16 +1,41 @@
 import React from "react";
 import Link from "next/link";
 
-export default async function ProductDetail({ params }) {
-  // ✅ Unwrap the params (Next.js 14+ fix)
-  const resolvedParams = await params;
-  const { slug } = resolvedParams;
+// STEP 1: Product ka type define karein
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  image: string;
+  price: number;
+  slug: string;
+}
+
+// STEP 2: 'host' URL ko Vercel ke liye dynamically set karein
+const host = process.env.VERCEL_URL
+  ? "https://" + process.env.VERCEL_URL
+  : "http://localhost:3000";
+
+// Server component (async)
+// STEP 3: Yahaan 'params' ko Promise ke roop mein type karein
+export default async function ProductDetail({ params }: { params: Promise<{ slug: string }> }) {
+  
+  // STEP 4: 'params' ko 'await' karein (Error yahaan fix hua hai)
+  const actualParams = await params;
+  const { slug } = actualParams;
 
   // 1️⃣ Fetch all products
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/products`
-  );
-  const products = await res.json();
+  const res = await fetch(`${host}/api/products`, {
+    cache: "no-store", // Hamesha naya data fetch karega
+  });
+
+  if (!res.ok) {
+     return (
+       <p className="text-center mt-10 text-red-600">Failed to load products 😢</p>
+     );
+  }
+
+  const products: Product[] = await res.json();
 
   // 2️⃣ Find product by slug
   const product = products.find((p) => p.slug === slug);
@@ -22,11 +47,9 @@ export default async function ProductDetail({ params }) {
   }
 
   // 3️⃣ Product link
-  const productLink = `${
-    process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-  }/products/${product.slug}`;
+  const productLink = `${host}/products/${product.slug}`;
 
-  // 4️⃣ Redirect to Order Form instead of WhatsApp
+  // 4️⃣ Redirect to Order Form
   return (
     <div className="max-w-md mx-auto mt-10 border rounded-xl shadow p-6 bg-white">
       <img
