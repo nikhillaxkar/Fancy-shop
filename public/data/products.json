@@ -1,0 +1,162 @@
+[
+  {
+    "id": 1,
+    "name": "Golden Bangle",
+    "slug": "golden-bangle",
+    "price": 499,
+    "description": "Beautiful golden bangle with intricate Indian design.",
+    "image": "/images/golden image.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Silver Bangle",
+    "slug": "silver-bangle",
+    "price": 459,
+    "description": "Trendy silver bangle perfect for festive occasions.",
+    "image": "/images/golden image.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Kundan Necklace",
+    "slug": "kundan-necklace",
+    "price": 1299,
+    "description": "Traditional Kundan necklace with gold finish.",
+    "image": "/images/nacklage hd.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Pearl Necklace",
+    "slug": "pearl-necklace",
+    "price": 899,
+    "description": "Elegant pearl necklace for weddings and functions.",
+    "image": "/images/pear nacklash.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Diamond Earrings",
+    "slug": "diamond-earrings",
+    "price": 999,
+    "description": "Sparkling diamond earrings for every special occasion.",
+    "image": "/images/dimond.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Silver Earrings",
+    "slug": "silver-earrings",
+    "price": 499,
+    "description": "Modern silver earrings with a chic design.",
+    "image": "/images/sliver image.jpg"
+  },
+  {
+    "id": 7,
+    "name": "Fancy Ring",
+    "slug": "fancy-ring",
+    "price": 799,
+    "description": "Elegant fancy ring for parties and events.",
+    "image": "https://www.tanishq.co.in/dw/image/v2/BKCK_PRD/on/demandware.static/-/Sites-Tanishq-product-catalog/default/dw7727659b/images/hi-res/500596FAAAB02_1.jpg?sw=640&sh=640"
+  },
+  {
+    "id": 8,
+    "name": "Gold Plated Ring",
+    "slug": "gold-plated-ring",
+    "price": 699,
+    "description": "Beautiful gold plated ring for everyday wear.",
+    "image": "https://via.placeholder.com/800x800.png?text=Gold+Plated+Ring"
+  },
+  {
+    "id": 9,
+    "name": "Pearl Bracelet",
+    "slug": "pearl-bracelet",
+    "price": 849,
+    "description": "Charming pearl bracelet with premium shine.",
+    "image": "https://via.placeholder.com/800x800.png?text=Pearl+Bracelet"
+  },
+  {
+    "id": 10,
+    "name": "Traditional Anklet",
+    "slug": "traditional-anklet",
+    "price": 599,
+    "description": "Traditional Indian anklet with ghungroo design.",
+    "image": "https://via.placeholder.com/800x800.png?text=Traditional+Anklet"
+  },
+  {
+    "id": 11,
+    "name": "Oxidized Earrings",
+    "slug": "oxidized-earrings",
+    "price": 499,
+    "description": "Ethnic oxidized silver earrings for casual wear.",
+    "image": "https://via.placeholder.com/800x800.png?text=Oxidized+Earrings"
+  },
+  {
+    "id": 12,
+    "name": "Beaded Necklace",
+    "slug": "beaded-necklace",
+    "price": 549,
+    "description": "Handcrafted beaded necklace for festive looks.",
+    "image": "https://via.placeholder.com/800x800.png?text=Beaded+Necklace"
+  },
+  {
+    "id": 13,
+    "name": "Gold Chain",
+    "slug": "gold-chain",
+    "price": 1099,
+    "description": "Shiny gold chain for men and women.",
+    "image": "https://via.placeholder.com/800x800.png?text=Gold+Chain"
+  },
+  {
+    "id": 14,
+    "name": "Fancy Hair Clip",
+    "slug": "fancy-hair-clip",
+    "price": 299,
+    "description": "Beautiful hair clip with sparkling stones.",
+    "image": "https://via.placeholder.com/800x800.png?text=Fancy+Hair+Clip"
+  },
+  {
+    "id": 15,
+    "name": "Crystal Bracelet",
+    "slug": "crystal-bracelet",
+    "price": 749,
+    "description": "Gorgeous crystal bracelet with premium finish.",
+    "image": "https://via.placeholder.com/800x800.png?text=Crystal+Bracelet"
+  },
+  {
+    "id": 16,
+    "name": "Rose Gold Ring",
+    "slug": "rose-gold-ring",
+    "price": 899,
+    "description": "Stylish rose gold ring with modern design.",
+    "image": "https://via.placeholder.com/800x800.png?text=Rose+Gold+Ring"
+  },
+  {
+    "id": 17,
+    "name": "Stone Earrings",
+    "slug": "stone-earrings",
+    "price": 559,
+    "description": "Colorful stone earrings with elegant appeal.",
+    "image": "https://via.placeholder.com/800x800.png?text=Stone+Earrings"
+  },
+  {
+    "id": 18,
+    "name": "Antique Necklace",
+    "slug": "antique-necklace",
+    "price": 1399,
+    "description": "Antique gold plated necklace for ethnic charm.",
+    "image": "https://via.placeholder.com/800x800.png?text=Antique+Necklace"
+  },
+  {
+    "id": 19,
+    "name": "Temple Jewelry Set",
+    "slug": "temple-jewelry-set",
+    "price": 1599,
+    "description": "Traditional South Indian temple jewelry set.",
+    "image": "https://via.placeholder.com/800x800.png?text=Temple+Jewelry+Set"
+  },
+  {
+    "id": 20,
+    "name": "Charm Pendant",
+    "slug": "charm-pendant",
+    "price": 499,
+    "description": "Elegant charm pendant with chain for daily wear.",
+    "image": "https://via.placeholder.com/800x800.png?text=Charm+Pendant"
+  }
+]
