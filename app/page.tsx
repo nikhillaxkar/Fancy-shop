@@ -105,7 +105,8 @@ export default function Home() {
         ) : (
           <Slider {...productSettings}>
             {products.map((item) => (
-              <div key={item.id} className="px-3">
+              // 👇 **MOBILE FIX APPLIED HERE**
+              <div key={item.id} className="sm:px-3">
                 <div className="border rounded-2xl shadow hover:shadow-lg transition bg-white overflow-hidden flex flex-col">
                   <img
                     src={item.image}
