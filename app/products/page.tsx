@@ -1,38 +1,57 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-// STEP 1: Product ka type define karein (TypeScript error fix)
+// ✅ Product type (matches your backend schema)
 interface Product {
-  id: number;
+  _id: string;
   name: string;
   description: string;
-  image: string;
+  imageUrl: string;
   price: number;
   slug: string;
 }
 
 export default function ProductsPage() {
-  // STEP 2: useState ko batayein ki yeh Product ka array hai (TypeScript error fix)
+  // ✅ Define product list & search term
   const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
 
+  // ✅ Backend base URL (from .env or fallback)
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+
+  // ✅ Fetch data from your backend
   useEffect(() => {
-    // Client-side fetch relative URL ('/api/products') use karta hai, jo sahi hai
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((data) => setProducts(data))
-      .catch((err) => console.error("Error loading products:", err));
-  }, []);
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(`${backendUrl}/api/products`);
+        const data = await res.json();
 
-  // 🔍 Filter products based on search input
+        if (data.success) {
+          setProducts(data.data);
+        } else {
+          console.error("Failed to load products");
+        }
+      } catch (err) {
+        console.error("Error loading products:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [backendUrl]);
+
+  // ✅ Filter products by search input
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="p-6">
-      {/* 🔍 Search bar */}
+      {/* 🔍 Search Bar */}
       <div className="flex justify-center mb-8">
         <input
           type="text"
@@ -44,20 +63,22 @@ export default function ProductsPage() {
       </div>
 
       {/* 🛍️ Products Grid */}
-      {filteredProducts.length > 0 ? (
+      {loading ? (
+        <p className="text-center text-gray-500 mt-10 text-lg">Loading products...</p>
+      ) : filteredProducts.length > 0 ? (
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredProducts.map((product) => (
             <div
-              key={product.id}
+              key={product._id}
               className="border rounded-xl shadow hover:shadow-lg transition bg-white overflow-hidden"
             >
               <img
-                src={product.image}
+                src={product.imageUrl}
                 alt={product.name}
                 className="w-full h-56 object-cover"
               />
               <div className="p-4">
-                <h2 className="text-lg font-semibold">{product.name}</h2>
+                <h2 className="text-lg font-semibold text-gray-800">{product.name}</h2>
                 <p className="text-gray-600 text-sm mt-1 line-clamp-2">
                   {product.description}
                 </p>

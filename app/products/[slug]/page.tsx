@@ -1,58 +1,76 @@
-import React from "react";
+"use client";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import Link from "next/link";
-// STEP 1: 'fs' aur 'path' ko import karein (yeh file padhne ke liye hai)
-import fs from "fs";
-import path from "path";
 
-// STEP 2: Product ka type (interface) define karein
 interface Product {
-  id: number;
+  _id: string;
   name: string;
-  description: string;
-  image: string;
-  price: number;
   slug: string;
+  price: number;
+  category: string;
+  description?: string;
+  imageUrl?: string;
 }
 
-// STEP 3: Seedha file se data padhne ka function
-async function getProductBySlug(slug: string): Promise<Product | undefined> {
-  // JSON file ka poora path batayein
-  const filePath = path.join(process.cwd(), "public/data/products.json");
-  // File ko padhein
-  const fileData = fs.readFileSync(filePath, "utf8");
-  // JSON data ko parse karein
-  const products: Product[] = JSON.parse(fileData);
+export default function ProductDetail() {
+  const { slug } = useParams();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // File mein se apna product dhoondein
-  const product = products.find((p) => p.slug === slug);
-  return product;
-}
+  useEffect(() => {
+    if (!slug) return;
 
-// Server component (async)
-export default async function ProductDetail({ params }: { params: Promise<{ slug: string }> }) {
-  
-  // STEP 4: 'params' ko 'await' karein (yeh Next.js 16 ke liye zaroori hai)
-  const actualParams = await params;
-  const { slug } = actualParams;
+    // ✅ use environment variable or fallback to local backend
+    const backendBaseUrl =
+      process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
 
-  // STEP 5: 'fetch' ki jagah, naye function ko call karein
-  const product = await getProductBySlug(slug);
+    const backendUrl = `${backendBaseUrl}/api/products/${slug}`;
 
-  // Agar product nahi mila toh error dikhayein
-  if (!product) {
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(backendUrl, {
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch product");
+
+        const result = await res.json();
+
+        // ✅ Your backend returns { success: true, data: {...} }
+        setProduct(result.data);
+      } catch (err: any) {
+        console.error("Error fetching product:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [slug]);
+
+  if (loading) {
     return (
-      <p className="text-center mt-10 text-gray-600">Product not found 😢</p>
+      <p className="text-center mt-10 text-gray-500">Loading product...</p>
     );
   }
 
-  // STEP 6: Product link (ab host ki zaroorat nahi)
+  if (error || !product) {
+    return (
+      <p className="text-center mt-10 text-gray-600">
+        {error || "Product not found 😢"}
+      </p>
+    );
+  }
+
   const productLink = `/products/${product.slug}`;
 
-  // Baaki ka aapka JSX code
   return (
     <div className="max-w-md mx-auto mt-10 border rounded-xl shadow p-6 bg-white">
       <img
-        src={product.image} // Make sure image path in JSON is like '/images/my-image.jpg'
+        src={product.imageUrl}
         alt={product.name}
         className="w-full h-64 object-cover rounded-lg"
       />
@@ -60,7 +78,6 @@ export default async function ProductDetail({ params }: { params: Promise<{ slug
       <p className="text-gray-600 mt-2">{product.description}</p>
       <p className="text-pink-600 font-bold mt-2">₹{product.price}</p>
 
-      {/* 🔗 Redirect to /order page with product info */}
       <Link
         href={`/order?productName=${encodeURIComponent(
           product.name
