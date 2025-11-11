@@ -93,8 +93,10 @@ export default function EditProductPage() {
         if (imageFile) form.append("image", imageFile);
 
         try {
+            const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
             toast.loading("Updating product...");
-            const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+            const res = await fetch(`${backendUrl}/api/products/${id}`, {
                 method: "PUT",
                 headers: { Authorization: `Bearer ${token}` },
                 body: form,
