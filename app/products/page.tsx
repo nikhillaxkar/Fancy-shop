@@ -14,24 +14,21 @@ interface Product {
 }
 
 export default function ProductsPage() {
-  // ✅ Define product list & search term
   const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // ✅ Backend base URL (from .env or fallback)
+  // ✅ Backend URL
   const backendUrl =
     process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
 
-  // ✅ Fetch data from your backend
+  // ✅ Fetch products from backend
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const res = await fetch(`${backendUrl}/api/products`);
         const data = await res.json();
-        console.log("Fetched products:", data);
 
-        // ✅ Handle backend returning array or object
         const productArray = Array.isArray(data)
           ? data
           : data.data || data.products || [];
@@ -47,7 +44,7 @@ export default function ProductsPage() {
     fetchProducts();
   }, [backendUrl]);
 
-  // ✅ Filter products by search input
+  // ✅ Filter products by name
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -55,47 +52,54 @@ export default function ProductsPage() {
   return (
     <div className="p-6">
       {/* 🔍 Search Bar */}
-      <div className="flex justify-center mb-8">
+      <div className="flex justify-center mb-10">
         <input
           type="text"
-          placeholder="Search products by name..."
+          placeholder="Search products..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full sm:w-1/2 border border-gray-300 rounded-full px-5 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="w-full sm:w-2/3 md:w-1/2 border border-gray-300 rounded-full px-5 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
         />
       </div>
 
-      {/* 🛍️ Products Grid */}
+      {/* 🛍️ Product Grid */}
       {loading ? (
         <p className="text-center text-gray-500 mt-10 text-lg">
           Loading products...
         </p>
       ) : filteredProducts.length > 0 ? (
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredProducts.map((product) => (
             <div
               key={product._id}
-              className="border rounded-xl shadow hover:shadow-lg transition bg-white overflow-hidden"
+              className="border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 bg-white overflow-hidden flex flex-col hover:translate-y-[-4px]"
             >
-              <img
-                src={product.imageUrl}
-                alt={product.name}
-                className="w-full h-56 object-cover"
-              />
-              <div className="p-4">
-                <h2 className="text-lg font-semibold text-gray-800">
-                  {product.name}
-                </h2>
-                <p className="text-gray-600 text-sm mt-1 line-clamp-2">
-                  {product.description}
-                </p>
-                <p className="text-pink-600 font-bold mt-2">
-                  ₹{product.price}
-                </p>
+              {/* 🖼️ Image Section */}
+              <div className="relative w-full h-[220px] sm:h-[250px] bg-white flex items-center justify-center overflow-hidden border-b border-gray-100">
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  className="max-h-full max-w-full object-contain transition-transform duration-500 hover:scale-110"
+                />
+              </div>
+
+              {/* 📝 Product Info */}
+              <div className="p-3 sm:p-4 flex flex-col justify-between flex-1 text-left">
+                <div>
+                  <h2 className="font-semibold text-base sm:text-lg text-gray-800 truncate">
+                    {product.name}
+                  </h2>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-2">
+                    {product.description}
+                  </p>
+                  <p className="text-pink-600 font-bold mt-2 text-sm sm:text-base">
+                    ₹{product.price}
+                  </p>
+                </div>
 
                 <Link
                   href={`/products/${product.slug}`}
-                  className="block mt-3 text-white bg-pink-500 hover:bg-pink-600 py-2 rounded-lg text-center text-sm"
+                  className="mt-3 text-white bg-pink-500 hover:bg-pink-600 py-1.5 rounded-lg text-sm text-center transition-all duration-300"
                 >
                   View Details
                 </Link>

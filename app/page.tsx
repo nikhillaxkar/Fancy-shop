@@ -6,7 +6,6 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-// ✅ Product type (as per backend response)
 interface Product {
   _id: string;
   name: string;
@@ -17,29 +16,21 @@ interface Product {
   slug: string;
 }
 
-// ✅ Main Component
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Backend URL (from .env or default)
   const backendUrl =
     process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
 
-  // ✅ Fetch products from backend
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const res = await fetch(`${backendUrl}/api/products`);
         const data = await res.json();
-
-        console.log("Fetched data:", data);
-
-        // ✅ Handle direct array response (like yours)
         const productArray = Array.isArray(data)
           ? data
           : data.data || data.products || [];
-
         setProducts(Array.isArray(productArray) ? productArray : []);
       } catch (error) {
         console.error("Failed to load products:", error);
@@ -47,11 +38,9 @@ export default function Home() {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, [backendUrl]);
 
-  // ✅ Banner Images
   const bannerImages = [
     "/images/dimond.jpg",
     "/images/golden image.jpg",
@@ -59,7 +48,6 @@ export default function Home() {
     "/images/pear nacklash.jpg",
   ];
 
-  // ✅ Slider settings
   const bannerSettings = {
     dots: true,
     infinite: true,
@@ -116,33 +104,38 @@ export default function Home() {
         ) : products.length === 0 ? (
           <p className="text-gray-500 text-center">No products found.</p>
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
             {products.slice(0, 8).map((item) => (
               <div
                 key={item._id}
-                className="border rounded-2xl shadow hover:shadow-lg transition bg-white overflow-hidden flex flex-col"
+                className="border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 bg-white overflow-hidden flex flex-col"
               >
-                <img
-                  src={item.imageUrl}
-                  alt={item.name}
-                  className="w-full h-36 sm:h-44 object-cover rounded-t-2xl"
-                />
-                <div className="p-3 flex flex-col justify-between flex-1">
+                {/* 🖼️ Image Section */}
+                <div className="relative w-full h-[220px] sm:h-[250px] bg-white flex items-center justify-center overflow-hidden border-b border-gray-100">
+                  <img
+                    src={item.imageUrl}
+                    alt={item.name}
+                    className="max-h-full max-w-full object-contain transition-transform duration-500 hover:scale-110"
+                  />
+                </div>
+
+                {/* 📝 Details Section */}
+                <div className="p-3 sm:p-4 flex flex-col justify-between flex-1 text-left">
                   <div>
-                    <h3 className="font-semibold text-base text-gray-800 truncate">
+                    <h3 className="font-semibold text-base sm:text-lg text-gray-800 truncate">
                       {item.name}
                     </h3>
-                    <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-2">
                       {item.description}
                     </p>
-                    <p className="text-pink-600 font-bold mt-2 text-sm">
+                    <p className="text-pink-600 font-bold mt-2 text-sm sm:text-base">
                       ₹{item.price}
                     </p>
                   </div>
 
                   <Link
                     href={`/products/${item.slug}`}
-                    className="mt-3 text-white bg-pink-500 hover:bg-pink-600 py-1.5 rounded-lg text-sm text-center"
+                    className="mt-3 text-white bg-pink-500 hover:bg-pink-600 py-1.5 rounded-lg text-sm text-center transition-all duration-300"
                   >
                     View Details
                   </Link>
@@ -153,7 +146,7 @@ export default function Home() {
         )}
       </div>
 
-      {/* View All Products Button */}
+      {/* 🔸 View All Products Button */}
       <div className="mt-10 mb-10">
         <Link
           href="/products"
