@@ -1,10 +1,20 @@
 "use client";
+
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  // 🔒 Hide header on these routes
+  const hideHeader =
+    pathname.startsWith("/admin-dashboard") || pathname.startsWith("/auth");
+
+  // If on admin or auth page, don't render header at all
+  if (hideHeader) return null;
 
   return (
     <header className="bg-gradient-to-r from-pink-50 to-white shadow-md sticky top-0 z-50">

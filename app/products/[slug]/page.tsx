@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
@@ -22,7 +23,6 @@ export default function ProductDetail() {
   useEffect(() => {
     if (!slug) return;
 
-    // ✅ use environment variable or fallback to local backend
     const backendBaseUrl =
       process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
 
@@ -37,9 +37,10 @@ export default function ProductDetail() {
         if (!res.ok) throw new Error("Failed to fetch product");
 
         const result = await res.json();
+        console.log("Fetched product:", result);
 
-        // ✅ Your backend returns { success: true, data: {...} }
-        setProduct(result.data);
+        // ✅ Handle all response formats safely
+        setProduct(result.data || result.product || result);
       } catch (err: any) {
         console.error("Error fetching product:", err);
         setError(err.message);

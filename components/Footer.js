@@ -1,7 +1,17 @@
 "use client";
+
 import { Facebook, Instagram, Twitter, Phone } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  // 🔒 Hide footer on admin or auth routes
+  const hideFooter =
+    pathname.startsWith("/admin-dashboard") || pathname.startsWith("/auth");
+
+  if (hideFooter) return null;
+
   return (
     <footer className="bg-gradient-to-r from-pink-100 via-pink-50 to-white text-gray-700 py-10 mt-10 border-t border-pink-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
@@ -50,13 +60,23 @@ export default function Footer() {
           </a>
         </div>
 
-        {/* Quick Links (optional but looks real) */}
+        {/* Quick Links */}
         <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-600 mb-6">
-          <a href="/" className="hover:text-pink-600 transition">Home</a>
-          <a href="/about" className="hover:text-pink-600 transition">About</a>
-          <a href="/shop" className="hover:text-pink-600 transition">Shop</a>
-          <a href="/contact" className="hover:text-pink-600 transition">Contact</a>
-          <a href="/privacy-policy" className="hover:text-pink-600 transition">Privacy Policy</a>
+          <a href="/" className="hover:text-pink-600 transition">
+            Home
+          </a>
+          <a href="/about" className="hover:text-pink-600 transition">
+            About
+          </a>
+          <a href="/shop" className="hover:text-pink-600 transition">
+            Shop
+          </a>
+          <a href="/contact" className="hover:text-pink-600 transition">
+            Contact
+          </a>
+          <a href="/privacy-policy" className="hover:text-pink-600 transition">
+            Privacy Policy
+          </a>
         </div>
 
         {/* Copyright */}

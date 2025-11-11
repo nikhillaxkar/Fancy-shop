@@ -20,7 +20,8 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
 
   // ✅ Backend base URL (from .env or fallback)
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+  const backendUrl =
+    process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
 
   // ✅ Fetch data from your backend
   useEffect(() => {
@@ -28,12 +29,14 @@ export default function ProductsPage() {
       try {
         const res = await fetch(`${backendUrl}/api/products`);
         const data = await res.json();
+        console.log("Fetched products:", data);
 
-        if (data.success) {
-          setProducts(data.data);
-        } else {
-          console.error("Failed to load products");
-        }
+        // ✅ Handle backend returning array or object
+        const productArray = Array.isArray(data)
+          ? data
+          : data.data || data.products || [];
+
+        setProducts(Array.isArray(productArray) ? productArray : []);
       } catch (err) {
         console.error("Error loading products:", err);
       } finally {
@@ -64,7 +67,9 @@ export default function ProductsPage() {
 
       {/* 🛍️ Products Grid */}
       {loading ? (
-        <p className="text-center text-gray-500 mt-10 text-lg">Loading products...</p>
+        <p className="text-center text-gray-500 mt-10 text-lg">
+          Loading products...
+        </p>
       ) : filteredProducts.length > 0 ? (
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredProducts.map((product) => (
@@ -78,11 +83,15 @@ export default function ProductsPage() {
                 className="w-full h-56 object-cover"
               />
               <div className="p-4">
-                <h2 className="text-lg font-semibold text-gray-800">{product.name}</h2>
+                <h2 className="text-lg font-semibold text-gray-800">
+                  {product.name}
+                </h2>
                 <p className="text-gray-600 text-sm mt-1 line-clamp-2">
                   {product.description}
                 </p>
-                <p className="text-pink-600 font-bold mt-2">₹{product.price}</p>
+                <p className="text-pink-600 font-bold mt-2">
+                  ₹{product.price}
+                </p>
 
                 <Link
                   href={`/products/${product.slug}`}

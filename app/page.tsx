@@ -22,20 +22,27 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Backend URL (from .env or directly)
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+  // ✅ Backend URL (from .env or default)
+  const backendUrl =
+    process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
 
-  // ✅ Fetch products from your backend
+  // ✅ Fetch products from backend
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const res = await fetch(`${backendUrl}/api/products`);
         const data = await res.json();
 
-        // ✅ your backend returns: { success: true, data: [ ... ] }
-        setProducts(data.data);
+        console.log("Fetched data:", data);
+
+        // ✅ Handle direct array response (like yours)
+        const productArray = Array.isArray(data)
+          ? data
+          : data.data || data.products || [];
+
+        setProducts(Array.isArray(productArray) ? productArray : []);
       } catch (error) {
-        console.error("Error loading products:", error);
+        console.error("Failed to load products:", error);
       } finally {
         setLoading(false);
       }
@@ -52,7 +59,7 @@ export default function Home() {
     "/images/pear nacklash.jpg",
   ];
 
-  // ✅ Banner Slider Settings
+  // ✅ Slider settings
   const bannerSettings = {
     dots: true,
     infinite: true,
@@ -110,7 +117,7 @@ export default function Home() {
           <p className="text-gray-500 text-center">No products found.</p>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {products.map((item) => (
+            {products.slice(0, 8).map((item) => (
               <div
                 key={item._id}
                 className="border rounded-2xl shadow hover:shadow-lg transition bg-white overflow-hidden flex flex-col"

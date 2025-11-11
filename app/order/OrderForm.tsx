@@ -3,7 +3,6 @@
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-// Component ka naam 'OrderPage' se badal kar 'OrderForm' kar dein
 export default function OrderForm() {
   const searchParams = useSearchParams();
   const productName = searchParams.get("productName");
@@ -15,24 +14,37 @@ export default function OrderForm() {
     address: "",
   });
 
-  const handleChange = (e: any) => { // 'e' ko type 'any' de dein
+  const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: any) => { // 'e' ko type 'any' de dein
+  const handleSubmit = (e: any) => {
     e.preventDefault();
 
+    // ✅ Ensure the link is valid (local or external)
+    let validLink = "";
+    if (productLink?.startsWith("/")) {
+      // local link (Next.js route)
+      validLink = `${window.location.origin}${productLink}`;
+    } else if (productLink && !productLink.startsWith("http")) {
+      validLink = `https://${productLink}`;
+    } else {
+      validLink = productLink || "";
+    }
+
+    // ✅ WhatsApp message formatting
     const message = encodeURIComponent(
-      `🛍️ New Order Request!\n\n` +
-        `📦 Product Name: ${productName}\n` +
-        `🔗 Product Link: ${productLink}\n\n` +
-        `👤 Customer Details:\n` +
+      `🛍️ *New Order Request!*\n\n` +
+        `📦 *Product Name:* ${productName}\n` +
+        `🔗 *Product Link:* ${validLink}\n\n` +
+        `👤 *Customer Details:*\n` +
         `Name: ${form.name}\n` +
         `📞 Phone: ${form.phone}\n` +
-        `🏠 Delivery Address: ${form.address}\n\n` +
+        `🏠 Address: ${form.address}\n\n` +
         `✅ Please confirm my order.`
     );
 
+    // ✅ Open WhatsApp
     window.open(`https://wa.me/9649281609?text=${message}`, "_blank");
   };
 
@@ -49,13 +61,22 @@ export default function OrderForm() {
         <p className="text-gray-800">
           <strong>Product:</strong> {productName}
         </p>
-        <a
-          href={productLink || "#"} // fallback add karein
-          target="_blank"
-          className="text-blue-600 underline text-sm"
-        >
-          View Product Details
-        </a>
+
+        {productLink && (
+          <a
+            href={
+              productLink.startsWith("/")
+                ? `${window.location.origin}${productLink}`
+                : productLink.startsWith("http")
+                ? productLink
+                : `https://${productLink}`
+            }
+            target="_blank"
+            className="text-blue-600 underline text-sm"
+          >
+            🔗 View Product Details
+          </a>
+        )}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-3">
@@ -96,7 +117,8 @@ export default function OrderForm() {
       </form>
 
       <p className="text-xs text-gray-500 text-center mt-4">
-        ⚡ We’ll contact you on WhatsApp within a few minutes to confirm your order.
+        ⚡ We’ll contact you on WhatsApp within a few minutes to confirm your
+        order.
       </p>
     </div>
   );
